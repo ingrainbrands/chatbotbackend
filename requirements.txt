@@ -1,0 +1,12 @@
+ollama
+playwright
+markdownify
+beautifulsoup4
+schedule
+streamlit
+fastapi
+uvicorn
+chromadb
+sentence-transformers
+httpx
+python-dotenv
