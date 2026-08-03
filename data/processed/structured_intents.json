@@ -1,0 +1,501 @@
+{
+  "intents": [
+    {
+      "name": "pricing",
+      "keywords": [
+        "price",
+        "prices",
+        "pricing",
+        "cost",
+        "costs",
+        "fee",
+        "fees",
+        "subscription",
+        "rate",
+        "rates"
+      ],
+      "phrases": [
+        "price list",
+        "list price",
+        "pricing plans",
+        "how much",
+        "subscription plans",
+        "software pricing"
+      ],
+      "exact_queries": [
+        "prices",
+        "pricing",
+        "cost",
+        "price list",
+        "list price",
+        "list plans"
+      ],
+      "answer": "Here is the price list from Iryax Global:\n* Basic Plan: FREE\n* Premium: ₹500/mo\n* Enterprise: ₹1000/mo\n* Custom: Custom (price not specified)\n\nFor additional information, please contact us at info@ingrainsystem.com or call +91-9010481048.",
+      "sources": [
+        "https://iryax.com/price"
+      ]
+    },
+    {
+      "name": "basic_plan",
+      "keywords": [
+        "basic plan",
+        "free plan",
+        "free tier",
+        "basic tier"
+      ],
+      "phrases": [
+        "what is the basic plan",
+        "details of basic plan",
+        "free plan features",
+        "what do i get for free"
+      ],
+      "exact_queries": [
+        "basic plan",
+        "free plan"
+      ],
+      "answer": "### Basic Plan Details\n#### Price: ₹0 (FREE)\n\n* Features:\n  * Unlimited Users\n  * Unlimited Job Postings\n  * Candidate Management\n  * Interview Scheduling\n  * Recruitment Reports\n  * Email Support\n\nFor additional information, please contact us at info@ingrainsystem.com or call +91-9010481048.",
+      "sources": [
+        "https://iryax.com/price"
+      ]
+    },
+    {
+      "name": "premium_plan",
+      "keywords": [
+        "premium plan",
+        "premium tier"
+      ],
+      "phrases": [
+        "what is the premium plan",
+        "details of premium plan",
+        "premium plan features"
+      ],
+      "exact_queries": [
+        "premium plan"
+      ],
+      "answer": "### Premium Plan Details\n#### Price: ₹500/mo\n#### Features:\n- Recruitment + Payroll Upto 20 Login\n- Attendance Management\n- Role-based access for employees, managers, HR.\n- Manage employee records and onboarding.\n- Generate payslips and payroll reports.\n- Applicants & Employee Reports\n- Email Support\n\nFor additional information, please contact us at info@ingrainsystem.com or call +91-9010481048.",
+      "sources": [
+        "https://iryax.com/price"
+      ]
+    },
+    {
+      "name": "enterprise_plan",
+      "keywords": [
+        "enterprise plan",
+        "enterprise tier"
+      ],
+      "phrases": [
+        "what is the enterprise plan",
+        "details of enterprise plan",
+        "enterprise plan features"
+      ],
+      "exact_queries": [
+        "enterprise plan"
+      ],
+      "answer": "### Enterprise Plan Details\n#### Price: ₹1000/mo\n\n* Features:\n  * Recruitment + Payroll Upto 50 Login\n  * Attendance Management\n  * Role-based access for employees, managers, HR.\n  * Manage employee records and onboarding.\n  * Generate payslips and payroll reports.\n  * Applicants & Employee Reports\n  * Priority Email Support\n  * Assessment Management\n\nFor additional information, please contact us at info@ingrainsystem.com or call +91-9010481048.",
+      "sources": [
+        "https://iryax.com/price"
+      ]
+    },
+    {
+      "name": "custom_plan",
+      "keywords": [
+        "custom plan",
+        "bespoke plan",
+        "custom pricing"
+      ],
+      "phrases": [
+        "what is the custom plan",
+        "details of custom plan",
+        "custom plan features"
+      ],
+      "exact_queries": [
+        "custom plan"
+      ],
+      "answer": "### Custom Plan Features\n#### Bespoke Integrations\n* Bespoke system modules design\n* Custom backend workflow integrations\n\n#### Custom Backend Architecture\n* Tailored storage & server architecture\n\n#### Design and Build Together\n* Didn't match criteria? Let's build together!\n\nFor additional information, please contact us at info@ingrainsystem.com or call +91-9010481048.",
+      "sources": [
+        "https://iryax.com/price"
+      ]
+    },
+    {
+      "name": "products",
+      "keywords": [
+        "product",
+        "products",
+        "module",
+        "modules"
+      ],
+      "phrases": [
+        "list products",
+        "what products",
+        "core products",
+        "what modules",
+        "what do you offer",
+        "your products",
+        "list of products",
+        "product list",
+        "list price products",
+        "all products",
+        "all modules"
+      ],
+      "exact_queries": [
+        "products",
+        "modules"
+      ],
+      "answer": "Here is the list of Iryax Global's core products:\n1. Recruitment - A precision-engineered recruitment ecosystem that automates the heavy lifting.\n2. Payroll - Seamlessly manage payroll, compliance, and employee operations in one unified command center.\n3. Task Management - A centralized task management platform that improves team collaboration and productivity.\n4. Medical Camps - Organize and manage medical camps efficiently with a centralized system for coordination, reporting, and patient care.\n5. Coworking Space - Optimize your physical footprint with intuitive space management and floor plan logistics.\n6. Lab Management - Streamline laboratory operations with a smart system for sample tracking, reporting, and compliance.\n\nFor additional information, please contact us at info@ingrainsystem.com or call +91-9010481048.",
+      "sources": [
+        "https://iryax.com/products"
+      ]
+    },
+    {
+      "name": "recruitment_product",
+      "keywords": [
+        "recruitment",
+        "hiring",
+        "hire",
+        "ats",
+        "applicant tracking",
+        "candidate",
+        "job posting",
+        "interviews"
+      ],
+      "phrases": [
+        "recruitment module",
+        "how does recruitment work",
+        "hiring software",
+        "recruitment features",
+        "what is recruitment"
+      ],
+      "exact_queries": [
+        "recruitment",
+        "hiring software"
+      ],
+      "answer": "The Recruitment product offers an applicant tracking system, allowing users to streamline job postings, interview scheduling, and contract signatures on a unified platform. It also features automatic data importing, customizable pipeline stages with automated actions, and seamless calendar integration to reduce manual effort and optimize the hiring process.\n\nFor additional information, please contact us at info@ingrainsystem.com or call +91-9010481048.",
+      "sources": [
+        "https://iryax.com/recruitment"
+      ]
+    },
+    {
+      "name": "payroll_product",
+      "keywords": [
+        "payroll",
+        "attendance",
+        "leave",
+        "timesheet",
+        "shifts",
+        "roster",
+        "salary"
+      ],
+      "phrases": [
+        "payroll module",
+        "attendance management",
+        "how does payroll work",
+        "payroll features",
+        "leave management"
+      ],
+      "exact_queries": [
+        "payroll",
+        "attendance"
+      ],
+      "answer": "The Payroll and Attendance product offers effortless time tracking with automated accuracy, smart leave management with built-in policies, one-click payroll processing, and advanced analytics for compliance reporting. It also integrates attendance logs directly with payroll processing and supports seamless accounting integration for streamlined payment processing.\n\nFor additional information, please contact us at info@ingrainsystem.com or call +91-9010481048.",
+      "sources": [
+        "https://iryax.com/attendance"
+      ]
+    },
+    {
+      "name": "task_product",
+      "keywords": [
+        "task",
+        "tasks",
+        "project",
+        "projects",
+        "sprints",
+        "agile",
+        "collaboration",
+        "planning"
+      ],
+      "phrases": [
+        "task management",
+        "project management",
+        "how does task management work",
+        "task features",
+        "sprint planning"
+      ],
+      "exact_queries": [
+        "task management",
+        "projects"
+      ],
+      "answer": "Task Management offers effortless task planning, smart workflow automation, team collaboration hub, and advanced productivity analytics, allowing teams to plan work, assign responsibilities, track progress, and deliver projects faster in a seamless platform. The system also supports recurring tasks, automated reminders, permissions, and role-based access for streamlined team execution.\n\nFor additional information, please contact us at info@ingrainsystem.com or call +91-9010481048.",
+      "sources": [
+        "https://iryax.com/task-management"
+      ]
+    },
+    {
+      "name": "camp_product",
+      "keywords": [
+        "camp",
+        "camps",
+        "medical camp",
+        "health camp",
+        "patients",
+        "volunteers"
+      ],
+      "phrases": [
+        "medical camp management",
+        "how do medical camps work",
+        "health camp software",
+        "camp features"
+      ],
+      "exact_queries": [
+        "medical camps",
+        "camps"
+      ],
+      "answer": "The Medical Camp Management product allows users to create and manage medical camps with ease, while also coordinating volunteers, registering patients, and tracking health metrics such as BMI and blood pressure. It provides a comprehensive platform for streamlining medical outreach programs.\n\nFor additional information, please contact us at info@ingrainsystem.com or call +91-9010481048.",
+      "sources": [
+        "https://iryax.com/camp"
+      ]
+    },
+    {
+      "name": "workspace_product",
+      "keywords": [
+        "workspace",
+        "coworking",
+        "office",
+        "cabin",
+        "desk",
+        "booking",
+        "room",
+        "iot"
+      ],
+      "phrases": [
+        "coworking space management",
+        "workspace features",
+        "how to book a cabin",
+        "room booking",
+        "smart office"
+      ],
+      "exact_queries": [
+        "workspace",
+        "coworking"
+      ],
+      "answer": "The Workspace Management product offers automatic calendar syncing and desk scheduling, seamless desk and cabin resource management, smart occupancy sensors with IoT integration, and instant control over climate, lighting, and AV settings. Users can manage bookings, view cabin capacities, track office layouts, and access real-time calendars on a single dashboard.\n\nFor additional information, please contact us at info@ingrainsystem.com or call +91-9010481048.",
+      "sources": [
+        "https://iryax.com/workspace"
+      ]
+    },
+    {
+      "name": "demo",
+      "keywords": [
+        "demo",
+        "book",
+        "schedule",
+        "meeting",
+        "call"
+      ],
+      "phrases": [
+        "book a demo",
+        "how to book a demo",
+        "schedule a demo",
+        "request a demo",
+        "i want a demo"
+      ],
+      "exact_queries": [
+        "demo",
+        "book demo",
+        "schedule demo"
+      ],
+      "answer": "**Step-by-Step Guide to Booking a Demo**\n\n### Required Fields:\n\n* **Full Name**\n* **Work Email**\n* **Mobile Number**\n* **Company Size:**\n\t+ Select from the following options:\n\t\t- 1-10 employees\n\t\t- 11-50 employees\n\t\t- 51-200 employees\n\t\t- 201-500 employees\n\t\t- 500-1k+ employees\n* **Industry / Business Type**\n\n### Steps to Book a Demo:\n\n1. Visit the Iryax Global website and click on the \"Book a Demo\" option.\n2. Fill in the required fields:\n\t* Full Name\n\t* Work Email\n\t* Mobile Number\n3. Select your company size from the provided options.\n4. Choose your industry / business type.\n5. Click on the \"Book My Demo\" button.\n6. Review and agree to Iryax Global's privacy policy.\n\n### Additional Options:\n\n* Visit Iryax Global's office in person by dropping by their location:\n\t+ Falt No: 301, 3rd Floor, Sri Sai Balaji Avenue,\n\t+ H. No: 1-98/9/25/p, VIP Hills, near Bank of Baroda,\n\t+ Arunodaya Colony, Madhapur,\n\t+ Hyderabad, Telangana 500081\n\nFor additional information, please contact us at info@ingrainsystem.com or call +91-9010481048.",
+      "sources": [
+        "https://iryax.com/contact"
+      ]
+    },
+    {
+      "name": "how_it_works",
+      "keywords": [
+        "how",
+        "works",
+        "process",
+        "workflow"
+      ],
+      "phrases": [
+        "how does it work",
+        "how it works",
+        "explain the process",
+        "how to use iryax"
+      ],
+      "exact_queries": [
+        "how it works",
+        "how does it work"
+      ],
+      "answer": "Here is how Iryax Global works:\n### Overview\nIryax Global is designed to be simple yet powerful, providing a unified authentication system and an intuitive dashboard for easy access to all tools and modules.\n\n#### Key Features\n* **Secure Authentication**: Unified login across the entire ecosystem for secure access.\n* **Single Dashboard**: Access to all tools and modules in one place.\n* **Automated Data Connectors**: Instant information flow between HR, CRM, and operational systems.\n* **Real-Time Insights**: Comprehensive, real-time view of business operations.\n\n#### Benefits\nStop managing multiple tools and start running your business.\n\nFor additional information, please contact us at info@ingrainsystem.com or call +91-9010481048.",
+      "sources": [
+        "https://iryax.com/how-it-works"
+      ]
+    },
+    {
+      "name": "security",
+      "keywords": [
+        "security",
+        "privacy",
+        "data",
+        "protection",
+        "gdpr",
+        "secure"
+      ],
+      "phrases": [
+        "is my data secure",
+        "privacy policy",
+        "data protection",
+        "security features"
+      ],
+      "exact_queries": [
+        "security",
+        "privacy",
+        "data privacy"
+      ],
+      "answer": "**Iryax Global Privacy Policy and Security Measures**\n=====================================================\n\n### Overview\n\nYour privacy is important to us. This policy explains how we collect, use, and protect your information when you use our website and services.\n\n### Information We Collect\n-------------------------\n\nWe may collect the following information:\n\n*   Name\n*   Email address\n*   Phone number\n*   Billing details\n*   Company information\n*   Payment information processed securely through Razorpay\n*   Browser and device information\n\n### How We Use Your Information\n------------------------------\n\nWe use your information to:\n\n*   Provide and manage our services\n*   Process payments securely\n*   Improve website performance and user experience\n*   Send invoices, updates, and support information\n*   Prevent fraud and unauthorized activities\n\n### Payment Information\n---------------------\n\nAll online payments are processed securely through Razorpay. We do not store your complete card details on our servers.\n\n### Data Protection\n------------------\n\nWe implement reasonable security measures to protect your personal information from unauthorized access, misuse, or disclosure.\n\n### Third-Party Services\n----------------------\n\nWe may use trusted third-party services for payment processing, analytics, hosting, and communication purposes.\n\n### Cookies\n----------\n\nOur website may use cookies to improve user experience and analyze website traffic. Please refer to our Cookie Policy for more details.\n\n### User Rights\n--------------\n\nYou may request to:\n\n*   Access your personal data\n*   Correct inaccurate information\n*   Delete your data where applicable\n\n### Policy Updates\n-----------------\n\nWe may update this Privacy Policy from time to time. Changes will be posted on this page.\n\n### Secure Payments\n------------------\n\nAll online payments are processed securely through Razorpay, ensuring that your payment information is protected and secure.\n\nFor additional information, please contact us at info@ingrainsystem.com or call +91-9010481048.",
+      "sources": [
+        "https://iryax.com/privacy-policy"
+      ]
+    },
+    {
+      "name": "contact",
+      "keywords": [
+        "contact",
+        "email",
+        "phone",
+        "address",
+        "office",
+        "location"
+      ],
+      "phrases": [
+        "how to contact",
+        "where is your office",
+        "phone number",
+        "email address",
+        "contact info",
+        "contact details",
+        "reach out"
+      ],
+      "exact_queries": [
+        "contact",
+        "email",
+        "phone",
+        "address"
+      ],
+      "answer": "Here is the contact information for Iryax Global:\n* Email: `info@ingrainsystem.com`\n* Phone/WhatsApp: `+91-9010481048`\n* Office Address:\n  * Falt No: 301, 3rd Floor, Sri Sai Balaji Avenue,\n  * H. No: 1-98/9/25/p, VIP Hills, near Bank of Baroda,\n  * Arunodaya Colony, Madhapur,\n  * Hyderabad, Telangana 500081\n\nFor additional information, please contact us at info@ingrainsystem.com or call +91-9010481048.",
+      "sources": [
+        "https://iryax.com/contact"
+      ]
+    },
+    {
+      "name": "careers",
+      "keywords": [
+        "job",
+        "jobs",
+        "career",
+        "careers",
+        "opening",
+        "openings",
+        "vacancy",
+        "vacancies",
+        "hiring",
+        "recruit",
+        "position",
+        "positions",
+        "internship",
+        "internships"
+      ],
+      "phrases": [
+        "job openings",
+        "career opportunities",
+        "work with us",
+        "hiring"
+      ],
+      "exact_queries": [
+        "jobs",
+        "careers"
+      ],
+      "answer": "Here is information about active careers and job openings at Iryax Global:\n\n### Active Job Openings\n#### 3 Active Openings across 2 Departments\n\n**Department | Role**\n-----------|--------\nDigital Marketing | Digital Marketing Executive\nDevelopment   | Web Developer, React.js Developer\n\n### Details of Active Openings\n\n* **Digital Marketing Executive**: Madhapur, Hyderabad. Experience: 1-2 Years.\n* **Web Developer**: Hyderabad. Experience: Fresher\n* **React.js Developer**: Hyderabad. Experience: 0-1 Years\n\nFor additional information, please contact us at info@ingrainsystem.com or call +91-9010481048.",
+      "sources": [
+        "https://iryax.com/careers"
+      ]
+    },
+    {
+      "name": "about",
+      "keywords": [],
+      "phrases": [
+        "about iryax",
+        "who is iryax",
+        "what is iryax",
+        "tell me about iryax",
+        "company overview",
+        "what does iryax do",
+        "about your company",
+        "about company",
+        "iryax overview",
+        "tell me about company",
+        "explain iryax",
+        "what is your company"
+      ],
+      "exact_queries": [
+        "about",
+        "overview",
+        "company"
+      ],
+      "answer": "# Iryax Global Overview\n=====================================\n\nIryax Global is an enterprise technology company.\n-----------------------------------------------\n\n### What They Do\n\nIryax Global connects the best tools into one platform, creating a unified ecosystem where businesses operate as one system.\n\n### Problems Solved\n\n#### Key Challenges\n\n* Disconnected data\n* No visibility\n* Teams in silos\n* Time lost switching systems\n* Multiple logins with no connection\n\n#### Solution\n\nIryax Global solves these problems by:\n\n1. Providing a single user ID and password for access to multiple tools.\n2. Allowing users to access multiple tools in one platform.\n3. Integrating data across systems for complete visibility.\n4. Offering a single dashboard for streamlined operations.\n\n### Mission\n\nIryax Global aims to help businesses stop managing tools and start running their operations more efficiently.\n\nFor additional information, please contact us at info@ingrainsystem.com or call +91-9010481048.",
+      "sources": [
+        "https://iryax.com/about"
+      ]
+    },
+    {
+      "name": "greeting",
+      "keywords": [
+        "hi",
+        "hello",
+        "hey",
+        "greetings",
+        "morning",
+        "evening"
+      ],
+      "phrases": [
+        "hi there",
+        "hello there",
+        "good morning",
+        "good evening",
+        "how are you",
+        "how are you doing"
+      ],
+      "exact_queries": [
+        "hi",
+        "hello",
+        "hey",
+        "hii",
+        "helloo"
+      ],
+      "answer": "Hello! I am Iryax Assistant. I can help you find information about our products, pricing, careers, and contact details. How can I help you today?",
+      "sources": []
+    },
+    {
+      "name": "identity",
+      "keywords": [
+        "who are you",
+        "what are you",
+        "are you a bot"
+      ],
+      "phrases": [
+        "tell me who you are",
+        "what is your name"
+      ],
+      "exact_queries": [
+        "who are you",
+        "who are you?",
+        "what are you",
+        "what are you?",
+        "are you a bot",
+        "are you a bot?"
+      ],
+      "answer": "I am Iryax Assistant, the official AI for Iryax Global. I can help you with products, pricing, careers, and contact info.",
+      "sources": []
+    }
+  ]
+}

@@ -23,7 +23,7 @@ ENV/
 # ─────────────────────────────────────────────────
 # Data & Models (can be large files)
 # ─────────────────────────────────────────────────
-backend/data/
+# backend/data/ (uncommented to allow tracking)
 *.bin
 *.gguf
 *.pt
