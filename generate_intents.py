@@ -11,8 +11,8 @@ CONTACT_EMAIL = os.getenv("CONTACT_EMAIL", "info@ingrainsystem.com")
 CONTACT_PHONE = os.getenv("CONTACT_PHONE", "+91-9010481048")
 
 BASE_DIR = pathlib.Path(__file__).parent.parent
-RAW_PAGES_PATH = BASE_DIR / "data" / "raw" / "iryax_pages.json"
-INTENTS_PATH = BASE_DIR / "data" / "processed" / "structured_intents.json"
+RAW_PAGES_PATH = BASE_DIR / "backend" / "data" / "raw" / "iryax_pages.json"
+INTENTS_PATH = BASE_DIR / "backend" / "data" / "processed" / "structured_intents.json"
 
 INTENTS_CONFIG = [
     {

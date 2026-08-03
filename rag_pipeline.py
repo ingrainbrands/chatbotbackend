@@ -13,9 +13,9 @@ CONTACT_EMAIL = os.getenv("CONTACT_EMAIL", "info@ingrainsystem.com")
 CONTACT_PHONE = os.getenv("CONTACT_PHONE", "+91-9010481048")
 
 # Config
-CHUNKS_PATH = pathlib.Path(__file__).parent.parent / "data" / "processed" / "iryax_chunks.json"
+CHUNKS_PATH = pathlib.Path(__file__).parent / "data" / "processed" / "iryax_chunks.json"
 MODEL_NAME = os.getenv("OLLAMA_MODEL", "llama3.2:3b")
-DB_DIR = pathlib.Path(__file__).parent.parent / "data" / "chromadb"
+DB_DIR = pathlib.Path(__file__).parent / "data" / "chromadb"
 
 # Initialize ChromaDB and Embedding Function
 chroma_client = chromadb.PersistentClient(path=str(DB_DIR))
@@ -72,7 +72,7 @@ threading.Thread(target=_prewarm, daemon=True).start()
 
 import re
 
-CACHE_FILE = pathlib.Path(__file__).parent.parent / "data" / "processed" / "response_cache.json"
+CACHE_FILE = pathlib.Path(__file__).parent / "data" / "processed" / "response_cache.json"
 
 def _load_cache() -> dict:
     if CACHE_FILE.exists():
@@ -145,11 +145,11 @@ def get_cache_key(message: str) -> str:
 
 
 # Load structured intents database
-INTENTS_PATH = pathlib.Path(__file__).parent.parent / "data" / "processed" / "structured_intents.json"
+INTENTS_PATH = pathlib.Path(__file__).parent / "data" / "processed" / "structured_intents.json"
 STRUCTURED_INTENTS = []
 LAST_INTENT_LOAD_TIME = 0.0
 
-PAGES_FILE = pathlib.Path(__file__).parent.parent / "data" / "raw" / "iryax_pages.json"
+PAGES_FILE = pathlib.Path(__file__).parent / "data" / "raw" / "iryax_pages.json"
 RAW_PAGES_CACHE = {}
 LAST_PAGES_LOAD_TIME = 0.0
 
@@ -271,7 +271,7 @@ CRITICAL RULES — NO EXCEPTIONS:
 Company: Iryax Global | Website: https://iryax.com | Email: {CONTACT_EMAIL}
 """
 
-LOGS_DIR = pathlib.Path(__file__).parent.parent / "data" / "analytics"
+LOGS_DIR = pathlib.Path(__file__).parent / "data" / "analytics"
 LOGS_DIR.mkdir(parents=True, exist_ok=True)
 ANALYTICS_FILE = LOGS_DIR / "logs.jsonl"
 
