@@ -55,7 +55,11 @@ async def stop_background_scraper():
 # Enable CORS for frontend integration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:5173",
+        "https://chatbot.iryax.com",
+        "https://iryax.com"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
