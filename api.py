@@ -97,7 +97,7 @@ async def chat_get_info():
         "endpoint": "/chat",
         "method_required": "POST",
         "body": {"message": "string", "history": "list"},
-        "docs": "http://localhost:8000/docs",
+        "docs": "https://apichatbot.iryax.com/docs",
     }
 
 # ── /doc  →  /docs redirect ────────────────────────────────────────────────────
