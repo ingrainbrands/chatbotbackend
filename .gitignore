@@ -41,3 +41,6 @@ desktop.ini
 .vscode/
 .idea/
 *.sublime-project
+
+scraper.log
+data/chromadb/

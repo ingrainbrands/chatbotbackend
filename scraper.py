@@ -19,8 +19,8 @@ import schedule
 import logging
 from urllib.parse import urldefrag
 
-# Add project root to sys.path so 'backend' import succeeds
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# Add project root to sys.path
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from dotenv import load_dotenv
 from bs4 import BeautifulSoup
@@ -31,10 +31,10 @@ from chromadb.utils import embedding_functions
 from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeoutError
 
 # ── Paths ────────────────────────────────────────────────────────────────────
-ROOT         = pathlib.Path(__file__).parent.parent
-PAGES_FILE   = ROOT / "backend" / "data" / "raw"       / "iryax_pages.json"     # per-page markdown cache
-OUTPUT_FILE  = ROOT / "backend" / "data" / "processed" / "iryax_chunks.json"    # all chunks
-DB_DIR       = ROOT / "backend" / "data" / "chromadb"
+ROOT         = pathlib.Path(__file__).parent
+PAGES_FILE   = ROOT / "data" / "raw"       / "iryax_pages.json"     # per-page markdown cache
+OUTPUT_FILE  = ROOT / "data" / "processed" / "iryax_chunks.json"    # all chunks
+DB_DIR       = ROOT / "data" / "chromadb"
 LOG_FILE     = ROOT / "scraper.log"
 
 class UnbufferedFileHandler(logging.FileHandler):
@@ -51,6 +51,19 @@ logging.basicConfig(
     ]
 )
 logger = logging.getLogger(__name__)
+
+
+def clear_log_file():
+    """Clear scraper.log every 3 hours to keep log size manageable."""
+    try:
+        for handler in logging.root.handlers:
+            if isinstance(handler, logging.FileHandler):
+                handler.close()
+        with open(LOG_FILE, "w", encoding="utf-8") as f:
+            f.write("")
+        logger.info("[Log Cleared] scraper.log has been cleared (scheduled every 3 hours).")
+    except Exception as e:
+        logger.warning(f"Failed to clear log file: {e}")
 
 
 TARGET_URL   = "https://iryax.com"
@@ -311,7 +324,7 @@ def scrape_job():
 
         # 7. Invalidate semantic cache so AI returns fresh data immediately
         try:
-            from backend.rag_pipeline import clear_semantic_cache
+            from rag_pipeline import clear_semantic_cache
             cleared = clear_semantic_cache()
             logger.info(f"[5] Invalidated semantic cache ({cleared} entries cleared).")
         except Exception as e:
@@ -319,7 +332,7 @@ def scrape_job():
 
         # 8. Generate new fast-reply intents via LLM
         try:
-            from backend.generate_intents import generate_structured_intents
+            from generate_intents import generate_structured_intents
             logger.info("[6] Proactively generating fast-reply structured intents via LLM...")
             generate_structured_intents()
         except Exception as e:
@@ -336,7 +349,8 @@ if __name__ == "__main__":
     scrape_job()
 
     schedule.every(10).minutes.do(scrape_job)
-    logger.info("Scheduler running. Scrape will repeat every 10 minutes (history preserved in scraper.log). Press Ctrl+C to stop.")
+    schedule.every(3).hours.do(clear_log_file)
+    logger.info("Scheduler running. Scrape will repeat every 10 minutes. scraper.log will clear every 3 hours. Press Ctrl+C to stop.")
 
     while True:
         schedule.run_pending()
