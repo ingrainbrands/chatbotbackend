@@ -385,27 +385,52 @@ CONTACT_FOOTER = f"\n\nFor additional information, please contact us at {CONTACT
 IRYAX_KEYWORDS = {
     # company
     "iryax", "ingrain", "ingrainsystem",
-    # products
+    # products / modules
     "product", "products", "module", "modules", "feature", "features",
-    "recruitment", "recruit", "hire", "hiring", "applicant", "candidate", "job", "jobs",
+    "service", "services", "solution", "solutions", "offering", "offerings",
+    "software", "tools", "platform", "system", "suite", "integrations",
+    "capabilities", "erp", "hrms", "hris",
+    # recruitment
+    "recruitment", "recruit", "hire", "hiring", "applicant", "candidate",
+    "job", "jobs", "resume", "cv", "screening", "onboarding", "ats",
+    "shortlist", "interview", "headcount", "manpower", "staffing",
+    # payroll / attendance
     "payroll", "attendance", "leave", "salary", "timesheet", "roster", "shift",
+    "wages", "payslip", "deduction", "tax", "tds", "pf", "esi", "epf",
+    "ctc", "overtime", "biometric", "geofencing", "punch", "wfh",
+    # task management
     "task", "tasks", "project", "sprint", "agile", "collaboration",
+    "kanban", "backlog", "checklist", "deadline", "milestone", "workflow",
+    # medical camps
     "medical", "camp", "camps", "health", "patient", "volunteer",
-    "workspace", "coworking", "cabin", "desk", "room", "booking", "iot", "space", "working", "workingspace", "co",
-    "lab", "laboratory",
+    "clinic", "screening", "checkup", "ngo", "wellness",
+    # workspace
+    "workspace", "coworking", "cabin", "desk", "room", "booking", "iot",
+    "space", "office", "conference", "meeting", "hotdesk", "flexi",
     # pricing
-    "price", "pricing", "cost", "fee", "plan", "plans", "subscription",
+    "price", "prices", "pricing", "cost", "fee", "fees", "plan", "plans",
+    "subscription", "rate", "charge", "charges", "amount", "budget",
+    "affordable", "expensive", "cheap", "quote", "quotation", "invoice",
+    "rupees", "inr", "license", "licensing", "renewal",
     "basic", "premium", "enterprise", "custom",
     # company info
-    "about", "company", "overview", "who", "what", "how", "explain", "tell",
-    "works", "work", "secure", "security", "privacy", "data",
+    "about", "company", "overview", "history", "mission", "vision",
+    "who", "what", "how", "explain", "tell",
+    "works", "work", "founded", "established",
+    # security / trust
+    "secure", "security", "privacy", "data", "protection", "gdpr",
+    "encryption", "safe", "trust", "compliance", "policy", "terms",
+    "ssl", "backup", "soc2",
     # contact / support
     "contact", "email", "phone", "support", "address", "office", "location",
-    "demo", "book", "schedule", "whatsapp",
+    "helpdesk", "ticket", "complaint", "enquiry", "inquiry", "whatsapp",
+    "demo", "book", "schedule", "trial",
     # careers
-    "career", "careers", "vacancy", "vacancies", "opening", "internship", "position",
-    # greetings already handled by intents but keep here as safe fallback
-    "hi", "hello", "hey",
+    "career", "careers", "vacancy", "vacancies", "opening", "internship",
+    "position", "fresher", "experienced", "employment", "apply", "application",
+    "developer", "designer", "marketing", "placement",
+    # greetings
+    "hi", "hello", "hey", "hai", "namaste",
 }
 
 # ── FAQ shown instantly when query is off-topic (no LLM/embedding used) ───────
