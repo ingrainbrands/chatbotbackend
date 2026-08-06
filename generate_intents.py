@@ -10,9 +10,9 @@ MODEL_NAME = os.getenv("OLLAMA_MODEL", "llama3.2:3b")
 CONTACT_EMAIL = os.getenv("CONTACT_EMAIL", "info@ingrainsystem.com")
 CONTACT_PHONE = os.getenv("CONTACT_PHONE", "+91-9010481048")
 
-BASE_DIR = pathlib.Path(__file__).parent.parent
-RAW_PAGES_PATH = BASE_DIR / "backend" / "data" / "raw" / "iryax_pages.json"
-INTENTS_PATH = BASE_DIR / "backend" / "data" / "processed" / "structured_intents.json"
+ROOT_DIR = pathlib.Path(__file__).parent
+RAW_PAGES_PATH = ROOT_DIR / "data" / "raw" / "iryax_pages.json"
+INTENTS_PATH = ROOT_DIR / "data" / "processed" / "structured_intents.json"
 
 INTENTS_CONFIG = [
     {
@@ -152,8 +152,15 @@ INTENTS_CONFIG = [
         "prompt": "Summarize what Iryax Global is and what problems it solves based on the text. Format it cleanly with markdown. Do not add conversational filler. Start directly with 'Iryax Global is an enterprise technology company'."
     },
     {
+        "name": "customers",
+        "keywords": ["customer", "customers", "client", "clients", "user", "users", "case study", "case studies", "testimonials", "feedback", "reviews", "portfolio", "trusted by", "partners"],
+        "phrases": ["who are your customers", "who uses iryax", "client list", "our clients", "our customers", "customer reviews", "client testimonials", "who do you work with", "customer success stories"],
+        "exact_queries": ["customers", "clients", "who uses iryax", "testimonials", "case studies"],
+        "static_answer": "Iryax Global serves a diverse group of forward-thinking enterprises, fast-growing startups, and organizations across multiple industries. For specific client references, case studies, or to see how we can help your business, please contact our sales team."
+    },
+    {
         "name": "greeting",
-        "keywords": ["hi", "hello", "hey", "greetings", "morning", "evening", "sup", "yo", "howdy", "hiya", "hey there", "good day", "afternoon"],
+        "keywords": ["hi", "hello","hlo", "hey", "greetings", "morning", "evening", "sup", "yo", "howdy", "hiya", "hey there", "good day", "afternoon"],
         "phrases": ["hi there", "hello there", "good morning", "good evening", "how are you", "how are you doing", "hey, hows it going", "nice to meet you", "greetings", "good afternoon", "hello everyone", "hi everyone"],
         "exact_queries": ["hi", "hello", "hey", "hii", "helloo", "good morning", "good evening"],
         "static_answer": "Hello! I am Iryax Assistant. I can help you find information about our products, pricing, careers, and contact details. How can I help you today?"

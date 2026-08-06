@@ -44,3 +44,5 @@ desktop.ini
 
 scraper.log
 data/chromadb/
+data/analytics/
+data/processed/response_cache.json

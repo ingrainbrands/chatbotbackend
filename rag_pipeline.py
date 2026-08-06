@@ -267,6 +267,7 @@ CRITICAL RULES — NO EXCEPTIONS:
 10. NEVER invent or hallucinate processes, step-by-step instructions, or mobile apps that are not explicitly detailed in the provided context. If the exact steps are missing, say you do not have that information.
 11. For greetings, say you are "Iryax Assistant" and ask how you can help.
 12. MANDATORY: ALWAYS add this exact sentence at the very end of every informational response: "For additional information, please contact us at {CONTACT_EMAIL} or call {CONTACT_PHONE}."
+13. DIRECT LINKS: Mention relevant product/topic names clearly (such as Coworking Space, Recruitment, Payroll, Task Management, Medical Camps, Lab Management, Pricing, Contact, About, Careers).
 
 Company: Iryax Global | Website: https://iryax.com | Email: {CONTACT_EMAIL}
 """
@@ -390,7 +391,7 @@ IRYAX_KEYWORDS = {
     "payroll", "attendance", "leave", "salary", "timesheet", "roster", "shift",
     "task", "tasks", "project", "sprint", "agile", "collaboration",
     "medical", "camp", "camps", "health", "patient", "volunteer",
-    "workspace", "coworking", "cabin", "desk", "room", "booking", "iot",
+    "workspace", "coworking", "cabin", "desk", "room", "booking", "iot", "space", "working", "workingspace", "co",
     "lab", "laboratory",
     # pricing
     "price", "pricing", "cost", "fee", "plan", "plans", "subscription",
@@ -444,6 +445,117 @@ def _ensure_contact_footer(text: str) -> str:
         return text.rstrip() + CONTACT_FOOTER
     return text
 
+_PAGE_LINK_MAP = [
+    (r"medical\s+camps?",         "https://iryax.com/camp"),
+    (r"task\s+management",        "https://iryax.com/task-management"),
+    (r"co\s+working\s+space",     "https://iryax.com/workspace"),
+    (r"coworking\s+space",        "https://iryax.com/workspace"),
+    (r"workingspace",             "https://iryax.com/workspace"),
+    (r"products?",                "https://iryax.com/products"),
+    (r"pricing",                  "https://iryax.com/price"),
+    (r"price\s+list",             "https://iryax.com/price"),
+    (r"contact",                  "https://iryax.com/contact"),
+    (r"about",                    "https://iryax.com/about"),
+    (r"recruitment",              "https://iryax.com/recruitment"),
+    (r"payroll",                  "https://iryax.com/attendance"),
+    (r"attendance",               "https://iryax.com/attendance"),
+    (r"workspace",                "https://iryax.com/workspace"),
+    (r"careers?",                 "https://iryax.com/careers"),
+    (r"privacy\s+policy",         "https://iryax.com/privacy-policy"),
+    (r"terms\s+and\s+conditions", "https://iryax.com/terms-and-conditions"),
+]
+
+
+def sanitize_nested_markdown_links(text: str) -> str:
+    """Repair any malformed nested markdown links like [Coworking Space](https://iryax.com/[workspace](https://...))"""
+    nested_pattern = re.compile(r'\[([^\]]+)\]\([^)]*\[[^\]]+\]\((https?://[^)]+)\)\)')
+    text = nested_pattern.sub(r'[\1](\2)', text)
+    return text
+
+def _inject_page_links(text: str) -> str:
+    """Post-process bot response to inject markdown links for known Iryax pages and email autolinks safely."""
+    text = sanitize_nested_markdown_links(text)
+
+    # Strip backticks around emails and phones so they can be converted to proper clickable markdown links
+    text = re.sub(r'`([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})`', r'\1', text)
+    text = re.sub(r'`(\+91[-\s]?\d{10}|\+?\d{10,12})`', r'\1', text)
+
+    email_pattern = re.compile(r'\b([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})\b')
+
+    def get_protected_spans(s: str):
+        spans = []
+        for m in re.finditer(r'\[[^\]]*\]\([^)]*\)', s):
+            spans.append(m.span())
+        for m in re.finditer(r'https?://[^\s)]+', s):
+            spans.append(m.span())
+        for m in re.finditer(r'<[^>]+>', s):
+            spans.append(m.span())
+
+        if not spans:
+            return []
+
+        spans.sort(key=lambda x: x[0])
+        merged = [spans[0]]
+        for curr in spans[1:]:
+            prev_s, prev_e = merged[-1]
+            if curr[0] <= prev_e:
+                merged[-1] = (prev_s, max(prev_e, curr[1]))
+            else:
+                merged.append(curr)
+        return merged
+
+    # 1. Convert emails and phone numbers outside protected spans
+    protected = get_protected_spans(text)
+    new_text = ""
+    last_idx = 0
+    phone_pattern = re.compile(r'(\+91[-\s]?\d{10}|\+?\d{10,12})')
+
+    def format_phone(match):
+        num = match.group(1)
+        clean_num = re.sub(r'[^\d+]', '', num)
+        if not clean_num.startswith('+'):
+            clean_num = '+' + clean_num
+        return f"[{num}](tel:{clean_num})"
+
+    for ps, pe in protected:
+        if last_idx < ps:
+            chunk = text[last_idx:ps]
+            chunk = email_pattern.sub(r'[\1](mailto:\1)', chunk)
+            chunk = phone_pattern.sub(format_phone, chunk)
+            new_text += chunk
+        new_text += text[ps:pe]
+        last_idx = pe
+    if last_idx < len(text):
+        chunk = text[last_idx:]
+        chunk = email_pattern.sub(r'[\1](mailto:\1)', chunk)
+        chunk = phone_pattern.sub(format_phone, chunk)
+        new_text += chunk
+    text = new_text
+
+
+    # 2. Convert keywords to markdown links outside protected spans
+    for pat, link in _PAGE_LINK_MAP:
+        protected = get_protected_spans(text)
+        regex = re.compile(rf"\b({pat})\b", flags=re.IGNORECASE)
+        
+        new_text = ""
+        last_idx = 0
+        for ps, pe in protected:
+            if last_idx < ps:
+                chunk = text[last_idx:ps]
+                chunk = regex.sub(rf"[\1]({link})", chunk)
+                new_text += chunk
+            new_text += text[ps:pe]
+            last_idx = pe
+        if last_idx < len(text):
+            chunk = text[last_idx:]
+            chunk = regex.sub(rf"[\1]({link})", chunk)
+            new_text += chunk
+        text = new_text
+
+    return sanitize_nested_markdown_links(text)
+
+
 
 # ── Topics we know are NOT in our scraped data — must never reach the LLM ─────
 # The 3B model will hallucinate names/facts for these if given the chance.
@@ -462,6 +574,25 @@ _NO_INFO_RESPONSE = (
 
 def generate_rag_response(user_message: str, history: list):
     start_t = time.time()
+
+    # ── Conversational guard ─────────
+    msg_lower_clean = re.sub(r'[^\w\s]', '', user_message.lower()).strip()
+    is_greeting = msg_lower_clean in ["hi", "hello", "hey", "hola", "hithere"]
+    is_ok = msg_lower_clean in ["ok", "okay", "alright", "gotit", "cool", "nice", "good"]
+    is_thanks = msg_lower_clean in ["thanks", "thankyou", "thx", "appreciateit", "done"]
+
+    if is_greeting or is_ok or is_thanks:
+        reply = "Hello! I am Iryax Assistant. How can I help you today?"
+        if is_ok:
+            reply = "Great!Thanks for the enquiry. Let me know if you need anything else."
+        if is_thanks:
+            reply = "You're welcome! Thanks for the enquiry. Let me know if there is anything else."
+        
+        log_conversation(user_message, reply, [], "conversational", (time.time() - start_t) * 1000)
+        words = reply.split(" ")
+        for i, w in enumerate(words):
+            yield json.dumps({"token": w + (" " if i < len(words) - 1 else ""), "sources": []}) + "\n"
+        return
 
     # ── Off-topic guard: fires before ANY embedding/ChromaDB/LLM work ─────────
     # If the message has zero Iryax-related words, skip everything and show FAQ.
@@ -483,6 +614,7 @@ def generate_rag_response(user_message: str, history: list):
     if dynamic_match:
         intent_name, instant_ans, intent_sources = dynamic_match
         instant_ans = _ensure_contact_footer(instant_ans)
+        instant_ans = _inject_page_links(instant_ans)
         log_conversation(user_message, instant_ans, intent_sources, f"instant_{intent_name}", (time.time() - start_t) * 1000)
         words = instant_ans.replace("\r", "").split(" ")
         for w in words:
@@ -493,6 +625,7 @@ def generate_rag_response(user_message: str, history: list):
     cache_key = get_cache_key(user_message)
     if cache_key in RESPONSE_CACHE:
         cached_ans = _ensure_contact_footer(RESPONSE_CACHE[cache_key])
+        cached_ans = _inject_page_links(cached_ans)
         log_conversation(user_message, cached_ans, ["Cache"], "cache", (time.time() - start_t) * 1000)
         yield json.dumps({"token": cached_ans, "sources": ["Cache"]}) + "\n"
         return
@@ -501,6 +634,7 @@ def generate_rag_response(user_message: str, history: list):
     semantic_ans = find_semantic_cache_match(user_message, threshold=0.82)
     if semantic_ans:
         semantic_ans = _ensure_contact_footer(semantic_ans)
+        semantic_ans = _inject_page_links(semantic_ans)
         RESPONSE_CACHE[cache_key] = semantic_ans
         threading.Thread(target=_update_single_embedding, args=(cache_key,), daemon=True).start()
         threading.Thread(target=_save_cache, daemon=True).start()
@@ -652,16 +786,21 @@ def generate_rag_response(user_message: str, history: list):
         # Yield a heartbeat comment so the HTTP read timeout doesn't fire
         # while Ollama is warming up / generating the first token.
         
+        # Buffer the full LLM response first, then post-process and yield
         full_response = ""
         for chunk_token in stream:
-            token = chunk_token["message"]["content"]
-            full_response += token
-            yield json.dumps({"token": token, "sources": sources}) + "\n"
-            
-        RESPONSE_CACHE[cache_key] = full_response
+            full_response += chunk_token["message"]["content"]
+
+        # Post-process: inject page links reliably (LLM is not reliable for this)
+        processed = _inject_page_links(full_response)
+
+        # Yield the processed response as a single token so links aren't split
+        yield json.dumps({"token": processed, "sources": sources}) + "\n"
+
+        RESPONSE_CACHE[cache_key] = processed
         threading.Thread(target=_update_single_embedding, args=(cache_key,), daemon=True).start()
         threading.Thread(target=_save_cache, daemon=True).start()
-        log_conversation(user_message, full_response, sources, "rag_llm", (time.time() - start_t) * 1000)
+        log_conversation(user_message, processed, sources, "rag_llm", (time.time() - start_t) * 1000)
     except Exception as e:
         yield json.dumps({"token": f"\\n\\n**Error:** {e}", "sources": []}) + "\n"
 

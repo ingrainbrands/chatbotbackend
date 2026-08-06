@@ -8,16 +8,24 @@ from fastapi.responses import StreamingResponse, RedirectResponse, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-# Add the project root to Python's sys.path so it can find the 'backend' folder
-ROOT = pathlib.Path(__file__).parent.parent
-sys.path.append(str(ROOT))
+# Add current directory to Python's sys.path
+ROOT = pathlib.Path(__file__).parent.resolve()
+sys.path.insert(0, str(ROOT))
 
-from backend.rag_pipeline import (
-    generate_rag_response,
-    clear_semantic_cache,
-    log_feedback,
-    get_analytics_summary
-)
+try:
+    from rag_pipeline import (
+        generate_rag_response,
+        clear_semantic_cache,
+        log_feedback,
+        get_analytics_summary
+    )
+except ImportError:
+    from backend.rag_pipeline import (
+        generate_rag_response,
+        clear_semantic_cache,
+        log_feedback,
+        get_analytics_summary
+    )
 
 SCRAPER_LOG_PATH = ROOT / "scraper.log"
 scraper_process = None
@@ -32,7 +40,10 @@ app = FastAPI(
 async def start_background_scraper():
     """Automatically launch the background web scraper when backend server starts."""
     global scraper_process
-    scraper_path = ROOT / "backend" / "scraper.py"
+    scraper_path = ROOT / "scraper.py"
+    if not scraper_path.exists():
+        scraper_path = ROOT / "backend" / "scraper.py"
+
     if scraper_path.exists():
         scraper_process = subprocess.Popen(
             [sys.executable, str(scraper_path)],
@@ -57,6 +68,9 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",
+        "http://localhost:5174",   # Vite dev server (current)
+        "http://localhost:5175",   # Vite fallback port
+        "http://localhost:3000",   # CRA / other dev servers
         "https://chatbot.iryax.com",
         "https://iryax.com"
     ],
@@ -66,8 +80,17 @@ app.add_middleware(
 )
 
 class ChatRequest(BaseModel):
-    message: str
+    # Accept both 'message' and 'question' (frontend sends 'question')
+    message: str = ""
+    question: str = ""
     history: List[Dict[str, str]] = []
+    website_id: str = "https://iryax.com"
+    session_id: str = "default_session"
+
+    @property
+    def user_query(self) -> str:
+        """Return whichever field the client sent."""
+        return (self.question or self.message).strip()
 
 class FeedbackRequest(BaseModel):
     query: str
@@ -80,15 +103,20 @@ async def health_check():
     """Verify the API is running."""
     return {"status": "ok", "message": "Iryax AI Assistant API is running"}
 
-# ── Chat — POST (streaming) ────────────────────────────────────────────────────
+# ── Chat — POST (streaming NDJSON) ─────────────────────────────────────────────
 @app.post("/chat")
 async def chat_endpoint(req: ChatRequest):
     """
-    Takes a user message and history, returns a streaming NDJSON response.
-    Each chunk: {"token": "...", "sources": [...]}
+    Accepts {question, message, history, session_id, website_id}.
+    Returns streaming NDJSON: one JSON object per line.
+    Final line includes: {answer, sources, session_id}
     """
+    query = req.user_query
+    if not query:
+        return {"error": "Empty message received."}
+
     def generator():
-        for chunk in generate_rag_response(req.message, req.history):
+        for chunk in generate_rag_response(query, req.history):
             yield chunk
 
     return StreamingResponse(generator(), media_type="application/x-ndjson")
