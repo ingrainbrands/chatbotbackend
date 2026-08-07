@@ -314,7 +314,7 @@ def scrape_job():
     logger.info(f"    {len(changed_pages)} page(s) new/updated")
     logger.info(f"    {len(removed_urls)} page(s) removed")
 
-    if not changed_pages and not removed_urls:
+    if not changed_pages and not removed_urls and OUTPUT_FILE.exists():
         logger.info("[3] No content changes detected. ChromaDB is up to date. [OK]")
     else:
         # 4. Re-chunk only changed pages and update ChromaDB surgically
