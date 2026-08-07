@@ -3,7 +3,13 @@ import os
 import pathlib
 import re
 import ollama
+import sys
 from dotenv import load_dotenv
+
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+if hasattr(sys.stderr, 'reconfigure'):
+    sys.stderr.reconfigure(encoding='utf-8')
 
 load_dotenv()
 MODEL_NAME = os.getenv("OLLAMA_MODEL", "llama3.2:3b")
@@ -49,7 +55,7 @@ INTENTS_CONFIG = [
             "plans and pricing", "price", "fees", "charges", "rate"
         ],
         "url_source": "https://iryax.com/price",
-        "prompt": "Extract ONLY the plan names and their prices into a simple markdown bulleted list. Do NOT include any descriptions, explanations, or features. Do NOT use any markdown headings (like ###). Start directly with 'Here is the price list from Iryax Global:'."
+        "prompt": "Extract all pricing plans into a single compact bulleted list. Each plan must be 1 short single-line bullet in this exact format: • **[Plan Name]** ([Price]) — [3-4 top key features separated by commas]. Do not output sub-bullets, headings, or extra lines. Start directly with 'Here are the pricing plans from Iryax Global:'."
     },
     {
         "name": "basic_plan",
@@ -741,7 +747,14 @@ INTENTS_CONFIG = [
 ]
 
 
-def generate_structured_intents():
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
+def generate_structured_intents(target_urls: set = None):
+    """
+    Generate or update structured intents.
+    If target_urls is specified, ONLY intents linked to those URLs will be regenerated;
+    existing intents for unchanged URLs will be preserved from structured_intents.json.
+    """
     print(f"[IntentGen] Starting LLM intent generation using {MODEL_NAME}...")
     if not RAW_PAGES_PATH.exists():
         print("[IntentGen] RAW_PAGES_PATH not found. Aborting.")
@@ -750,36 +763,54 @@ def generate_structured_intents():
     with open(RAW_PAGES_PATH, "r", encoding="utf-8") as f:
         pages = json.load(f)
 
-    generated_intents = []
+    # Load existing intents map so we can update in-place if target_urls is provided
+    existing_map = {}
+    if target_urls and INTENTS_PATH.exists():
+        try:
+            with open(INTENTS_PATH, "r", encoding="utf-8") as f:
+                old_data = json.load(f).get("intents", [])
+                for item in old_data:
+                    existing_map[item["name"]] = item
+        except Exception:
+            pass
 
+    # Filter configs to process
+    configs_to_process = []
     for config in INTENTS_CONFIG:
+        url = config.get("url_source")
+        if target_urls and url and url not in target_urls and config["name"] in existing_map:
+            # Skip regenerating unchanged intents — preserve existing answer
+            continue
+        configs_to_process.append(config)
+
+    print(f"[IntentGen] Processing {len(configs_to_process)} intent(s) (target_urls={target_urls or 'ALL'})...")
+
+    results_map = dict(existing_map)
+
+    def process_config(config):
         if "static_answer" in config:
-            generated_intents.append({
+            return config["name"], {
                 "name": config["name"],
                 "keywords": config["keywords"],
                 "phrases": config["phrases"],
                 "exact_queries": config["exact_queries"],
                 "answer": config["static_answer"],
                 "sources": []
-            })
-            print(f"[IntentGen] Added static intent: {config['name']}")
-            continue
+            }
             
         url = config["url_source"]
         if url not in pages:
             print(f"[IntentGen] Skipping {config['name']} - URL {url} not scraped.")
-            continue
+            return config["name"], None
             
         markdown = pages[url].get("markdown", "")
-        # Clean markdown to reduce context size
-        markdown = re.sub(r'!\[.*?\]\(.*?\)', '', markdown)
-        markdown = markdown[:3000] # Cap length just in case
+        clean_md = re.sub(r'!\[.*?\]\(.*?\)', '', markdown)[:3000]
         
         print(f"[IntentGen] Generating intent: {config['name']}")
         
         messages = [
             {"role": "system", "content": "You are a helpful assistant for Iryax Global. Provide output exactly as requested."},
-            {"role": "user", "content": f"{config['prompt']}\n\nContext text:\n{markdown}"}
+            {"role": "user", "content": f"{config['prompt']}\n\nContext text:\n{clean_md}"}
         ]
         
         try:
@@ -790,27 +821,41 @@ def generate_structured_intents():
             )
             answer = response["message"]["content"].strip()
             
-            # Ensure contact details are appended
             if "For additional information" not in answer:
                 answer += f"\n\nFor additional information, please contact us at {CONTACT_EMAIL} or call {CONTACT_PHONE}."
                 
-            generated_intents.append({
+            return config["name"], {
                 "name": config["name"],
                 "keywords": config["keywords"],
                 "phrases": config["phrases"],
                 "exact_queries": config["exact_queries"],
                 "answer": answer,
                 "sources": [url]
-            })
+            }
         except Exception as e:
             print(f"[IntentGen] Failed to generate {config['name']}: {e}")
+            return config["name"], existing_map.get(config["name"])
 
-    if generated_intents:
-        # Save to file
+    # Run in parallel with max 3 worker threads
+    with ThreadPoolExecutor(max_workers=3) as executor:
+        futures = [executor.submit(process_config, cfg) for cfg in configs_to_process]
+        for future in as_completed(futures):
+            name, item = future.result()
+            if item:
+                results_map[name] = item
+
+    # Preserve order matching INTENTS_CONFIG
+    final_intents = []
+    for config in INTENTS_CONFIG:
+        name = config["name"]
+        if name in results_map:
+            final_intents.append(results_map[name])
+
+    if final_intents:
         INTENTS_PATH.parent.mkdir(parents=True, exist_ok=True)
         with open(INTENTS_PATH, "w", encoding="utf-8") as f:
-            json.dump({"intents": generated_intents}, f, indent=2, ensure_ascii=False)
-        print(f"[IntentGen] Successfully saved {len(generated_intents)} generated intents to structured_intents.json.")
+            json.dump({"intents": final_intents}, f, indent=2, ensure_ascii=False)
+        print(f"[IntentGen] Successfully saved {len(final_intents)} intents to structured_intents.json.")
 
 if __name__ == "__main__":
     generate_structured_intents()

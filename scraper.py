@@ -11,6 +11,11 @@ Pipeline (runs every 1 hour):
 
 import sys
 import os
+
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+if hasattr(sys.stderr, 'reconfigure'):
+    sys.stderr.reconfigure(encoding='utf-8')
 import json
 import time
 import hashlib
@@ -51,6 +56,10 @@ logging.basicConfig(
     ]
 )
 logger = logging.getLogger(__name__)
+
+# Suppress verbose HTTP request logs from httpx/httpcore (used by Ollama) in scraper.log
+logging.getLogger("httpx").setLevel(logging.WARNING)
+logging.getLogger("httpcore").setLevel(logging.WARNING)
 
 
 def clear_log_file():
@@ -333,8 +342,8 @@ def scrape_job():
         # 8. Generate new fast-reply intents via LLM
         try:
             from generate_intents import generate_structured_intents
-            logger.info("[6] Proactively generating fast-reply structured intents via LLM...")
-            generate_structured_intents()
+            logger.info(f"[6] Proactively updating fast-reply intents for {len(changed_pages)} changed page(s)...")
+            generate_structured_intents(changed_pages)
         except Exception as e:
             logger.warning(f"Failed to generate structured intents: {e}")
 

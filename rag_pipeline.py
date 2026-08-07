@@ -199,10 +199,6 @@ def check_dynamic_intent(message: str):
     Structured Database / Instant Answer lookup for predictable Dynamic Intents,
     loaded dynamically from structured_intents.json to avoid hardcoded text in Python.
     """
-    msg_lower = message.strip().lower()
-    
-
-
     load_structured_intents()
 
     msg_lower = message.strip().lower()

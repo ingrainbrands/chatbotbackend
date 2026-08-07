@@ -63,16 +63,11 @@ async def stop_background_scraper():
         scraper_process = None
 
 
-# Enable CORS for frontend integration
+# Enable CORS for frontend & production integration
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:5173",
-        "http://localhost:5174",   # Vite dev server (current)
-        "http://localhost:5175",   # Vite fallback port
-        "http://localhost:3000",   # CRA / other dev servers
-        "https://chatbot.iryax.com",
-        "https://iryax.com"
+        "*"
     ],
     allow_credentials=True,
     allow_methods=["*"],
