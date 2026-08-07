@@ -45,11 +45,15 @@ async def start_background_scraper():
         scraper_path = ROOT / "backend" / "scraper.py"
 
     if scraper_path.exists():
-        scraper_process = subprocess.Popen(
-            [sys.executable, str(scraper_path)],
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.STDOUT
-        )
+        try:
+            log_file = open(SCRAPER_LOG_PATH, "a", encoding="utf-8")
+            scraper_process = subprocess.Popen(
+                [sys.executable, str(scraper_path)],
+                stdout=log_file,
+                stderr=subprocess.STDOUT
+            )
+        except Exception as e:
+            print("Failed to auto-launch background scraper:", e)
 
 @app.on_event("shutdown")
 async def stop_background_scraper():
