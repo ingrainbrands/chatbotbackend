@@ -134,8 +134,8 @@ def fetch_page(page, url: str) -> tuple[str, str]:
     Navigate to `url` using an already-open Playwright Page.
     Returns (title, markdown).  Raises on error.
     """
-    page.goto(url, wait_until="networkidle")
-    time.sleep(2) # wait for SPA render
+    page.goto(url, wait_until="domcontentloaded", timeout=15000)
+    time.sleep(1.5) # wait for SPA render
     html  = page.content()
     title = page.title()
     markdown = html_to_markdown(html)
@@ -151,7 +151,7 @@ def crawl_site(limit: int = CRAWL_LIMIT) -> dict[str, dict]:
         browser = p.chromium.launch(headless=True)
         context = browser.new_context()
         page = context.new_page()
-        page.set_default_timeout(30000)
+        page.set_default_timeout(15000)
         
         try:
             # ── BFS crawl ─────────────────────────────────────────────────────────
@@ -362,6 +362,9 @@ if __name__ == "__main__":
     logger.info("Scheduler running. Scrape will repeat every 10 minutes. scraper.log will clear every 3 hours. Press Ctrl+C to stop.")
 
     while True:
-        schedule.run_pending()
+        try:
+            schedule.run_pending()
+        except Exception as e:
+            logger.error(f"[Scheduler Error] Unhandled exception in schedule execution: {e}")
         time.sleep(30)
 
