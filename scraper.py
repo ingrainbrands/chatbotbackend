@@ -61,41 +61,6 @@ logger = logging.getLogger(__name__)
 logging.getLogger("httpx").setLevel(logging.WARNING)
 logging.getLogger("httpcore").setLevel(logging.WARNING)
 
-LOCK_FILE = ROOT / "scraper.pid"
-
-def is_process_running(pid: int) -> bool:
-    try:
-        if os.name == 'nt':
-            import ctypes
-            kernel32 = ctypes.windll.kernel32
-            PROCESS_QUERY_INFORMATION = 0x0400
-            handle = kernel32.OpenProcess(PROCESS_QUERY_INFORMATION, False, pid)
-            if handle:
-                kernel32.CloseHandle(handle)
-                return True
-            return False
-        else:
-            os.kill(pid, 0)
-            return True
-    except Exception:
-        return False
-
-def acquire_single_instance_lock():
-    """Ensure only one instance of scraper.py runs at a time."""
-    pid = os.getpid()
-    if LOCK_FILE.exists():
-        try:
-            with open(LOCK_FILE, "r") as f:
-                old_pid = int(f.read().strip())
-            if old_pid != pid and is_process_running(old_pid):
-                logger.info(f"[Scraper] Another scraper process (PID {old_pid}) is already running. Exiting duplicate instance.")
-                sys.exit(0)
-        except Exception:
-            pass
-
-    with open(LOCK_FILE, "w") as f:
-        f.write(str(pid))
-
 
 def clear_log_file():
     """Clear scraper.log every 3 hours to keep log size manageable."""
@@ -388,7 +353,6 @@ def scrape_job():
 # ── Entry point ───────────────────────────────────────────────────────────────
 if __name__ == "__main__":
     load_dotenv()
-    acquire_single_instance_lock()
 
     # Run once immediately, then schedule every 10 minutes
     scrape_job()
