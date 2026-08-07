@@ -43,6 +43,4 @@ desktop.ini
 *.sublime-project
 
 scraper.log
-data/chromadb/
-data/analytics/
 data/processed/response_cache.json
